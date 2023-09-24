@@ -6,7 +6,7 @@ internal class TransactionRepository : ITransactionRepository
 {
     private IDictionary<int, Transaction> _cache = new Dictionary<int, Transaction>();
 
-    public Transaction Resolve(int id) => _cache[id];
+    public Transaction Get(int id) => _cache[id];
 
     public bool Contains(int id) => _cache.ContainsKey(id);
 

@@ -1,10 +1,10 @@
-using JobInterviewTestConsole.Domain;
+﻿using JobInterviewTestConsole.Domain;
 
 namespace JobInterviewTestConsole.Infrastructure;
 
 internal interface ITransactionRepository
 {
-    Transaction Resolve(int id);
+    Transaction Get(int id);
 
     bool Contains(int id);
 
