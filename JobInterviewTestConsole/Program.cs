@@ -1,3 +1,39 @@
-// See https://aka.ms/new-console-template for more information
+using JobInterviewTestConsole.Commands;
+using JobInterviewTestConsole.Infrastructure;
 
-Console.WriteLine("Hello, World!");
+var transactionRepository = new TransactionRepository();
+var allCommandsDictionary = new Dictionary<string, ICommand>
+{
+    { Constants.Add, new AddCommand(transactionRepository) },
+    { Constants.Get, new GetCommand(transactionRepository) },
+    { Constants.Exit, new ExitCommand() },
+};
+
+try
+{
+    while (true)
+    {
+        Console.WriteLine("Here are 'add', 'get' or 'exit' commands available, please proceed: ");
+        var value = Console.ReadLine()?.ToLower() ?? string.Empty;
+
+        if (!allCommandsDictionary.ContainsKey(value))
+        {
+            Console.WriteLine("Unknown command. Please, try again.");
+            continue;
+        }
+
+        var commandResult = allCommandsDictionary[value].Execute();
+
+        if(commandResult.Succeed)
+            continue;
+        
+        if (commandResult.Error.Code == ErrorCode.Exit)
+            break;
+
+        Console.WriteLine($"Error happened: {commandResult.Error.Message}. Please, try again. ");
+    }
+}
+catch (Exception exception)
+{
+    Console.WriteLine($"Unhandled exception happened: {exception.Message}");
+}
