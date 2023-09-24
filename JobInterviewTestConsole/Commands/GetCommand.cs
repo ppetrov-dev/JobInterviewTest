@@ -13,6 +13,8 @@ internal class GetCommand : ICommand
         _transactionRepository = transactionRepository;
     }
 
+    public string Name => Constants.Get;
+
     public CommandResult Execute()
     {
         Console.Write("Enter Id: ");
