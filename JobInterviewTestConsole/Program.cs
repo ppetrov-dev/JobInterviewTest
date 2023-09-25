@@ -1,5 +1,3 @@
-using System.Reflection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JobInterviewTestConsole;
@@ -8,15 +6,17 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        var configuration = new ConfigurationBuilder().Build();
-        var serviceProvider = CreateIocContainer(configuration).BuildServiceProvider();
+        var serviceProvider = BuildServiceProvider();
+
         var runner = serviceProvider.GetRequiredService<IApplicationRunner>();
         runner.Run();
     }
 
-    private static IServiceCollection CreateIocContainer(IConfiguration configuration)
+    private static ServiceProvider BuildServiceProvider()
     {
-        return new ServiceCollection()
-            .UseStartup<Startup>(configuration);
+        var services = new ServiceCollection();
+        var startup = new Startup();
+        startup.ConfigureServices(services);
+        return services.BuildServiceProvider();
     }
 }
