@@ -24,13 +24,16 @@ try
 
         var commandResult = allCommandsDictionary[value].Execute();
 
-        if(commandResult.Succeed)
+        if (commandResult.Succeed)
+        {
+            Console.WriteLine("[OK]");
             continue;
+        }
         
         if (commandResult.Error.Code == ErrorCode.Exit)
             break;
 
-        Console.WriteLine($"Error happened: {commandResult.Error.Message}. Please, try again. ");
+        Console.WriteLine($"[NOT OK] Error happened: {commandResult.Error.Message}. Please, try again. ");
     }
 }
 catch (Exception exception)
