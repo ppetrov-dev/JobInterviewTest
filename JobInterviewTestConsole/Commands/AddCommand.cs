@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using JobInterviewTestConsole.Domain;
 using JobInterviewTestConsole.Infrastructure;
 
@@ -11,8 +16,6 @@ internal class AddCommand : ICommand
     {
         _transactionRepository = transactionRepository;
     }
-
-    public string Name => Constants.Add;
 
     public CommandResult Execute()
     {

@@ -1,22 +1,42 @@
-using System.Reflection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using JobInterviewTestConsole.Commands;
+using JobInterviewTestConsole.Infrastructure;
 
-namespace JobInterviewTestConsole;
-
-internal class Program
+var transactionRepository = new TransactionRepository();
+var allCommandsDictionary = new Dictionary<string, ICommand>
 {
-    static void Main(string[] args)
-    {
-        var configuration = new ConfigurationBuilder().Build();
-        var serviceProvider = CreateIocContainer(configuration).BuildServiceProvider();
-        var runner = serviceProvider.GetRequiredService<IApplicationRunner>();
-        runner.Run();
-    }
+    { Constants.Add, new AddCommand(transactionRepository) },
+    { Constants.Get, new GetCommand(transactionRepository) },
+    { Constants.Exit, new ExitCommand() },
+};
 
-    private static IServiceCollection CreateIocContainer(IConfiguration configuration)
+try
+{
+    while (true)
     {
-        return new ServiceCollection()
-            .UseStartup<Startup>(configuration);
+        Console.WriteLine("Here are 'add', 'get' or 'exit' commands available, please proceed: ");
+        var value = Console.ReadLine()?.ToLower() ?? string.Empty;
+
+        if (!allCommandsDictionary.ContainsKey(value))
+        {
+            Console.WriteLine("Unknown command. Please, try again.");
+            continue;
+        }
+
+        var commandResult = allCommandsDictionary[value].Execute();
+
+        if (commandResult.Succeed)
+        {
+            Console.WriteLine("[OK]");
+            continue;
+        }
+        
+        if (commandResult.Error.Code == ErrorCode.Exit)
+            break;
+
+        Console.WriteLine($"[NOT OK] Error happened: {commandResult.Error.Message}. Please, try again. ");
     }
+}
+catch (Exception exception)
+{
+    Console.WriteLine($"Unhandled exception happened: {exception.Message}");
 }
