@@ -17,7 +17,7 @@ internal class ApplicationRunner : IApplicationRunner
         {
             while (true)
             {
-                Console.WriteLine($"The following command available ({string.Join(", ", _allCommandsDictionary.Keys)}), please proceed: ");
+                Console.WriteLine($"The following commands available ({string.Join(", ", _allCommandsDictionary.Keys)}), please proceed: ");
                 var value = Console.ReadLine()?.ToLower() ?? string.Empty;
 
                 if (!_allCommandsDictionary.ContainsKey(value))
